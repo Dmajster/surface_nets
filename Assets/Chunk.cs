@@ -124,7 +124,7 @@ namespace Assets
                     continue;
                 }
 
-                featurePoint += Vector3.Lerp(position1, position2, 0.5f);
+                featurePoint += Vector3.Lerp(position1, position2, Mathf.InverseLerp(density1, density2, 0f));
                 edgeCrossings++;
             }
 

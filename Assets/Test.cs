@@ -14,7 +14,7 @@ namespace Assets
             MeshFilter = GetComponent<MeshFilter>();
             MeshRenderer = GetComponent<MeshRenderer>();
 
-            Chunk = new Chunk(Vector3.zero, new Vector3(64,64,64));
+            Chunk = new Chunk(Vector3.zero, new Vector3(32,32,32));
             Chunk.PopulateSphere();
 
             var start = Time.realtimeSinceStartup;

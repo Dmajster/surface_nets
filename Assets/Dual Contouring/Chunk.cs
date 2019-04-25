@@ -2,21 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.Dual_Contouring
 {
-    [Serializable]
-    public struct Edge
-    {
-        public int Index1;
-        public int Index2;
-
-        public Edge(int index1, int index2)
-        {
-            Index1 = index1;
-            Index2 = index2;
-        }
-    }
-
     [Serializable]
     public struct Chunk
     {
@@ -60,12 +47,36 @@ namespace Assets
                 {
                     for (var z = 0; z < Size.z; z++)
                     {
-                        Voxels[GetIndex(new Vector3(x, y, z))].Density = Size.x / 4 - Mathf.Sqrt(Mathf.Pow(x - Size.x / 2, 2) +
-                                                                                    Mathf.Pow(y - Size.y / 2, 2) +
-                                                                                    Mathf.Pow(z - Size.z / 2, 2));
+                        Voxels[GetIndex(new Vector3(x, y, z))].Density = Torus(new Vector3(x, y, z));
                     }
                 }
             }
+        }
+
+        public float Torus(Vector3 position)
+        {
+            var torusPosition = new Vector3(Size.x/2, Size.y/2, Size.z/2);
+            var torusRadius = Size.x / 8;
+            var torusTubeRadius = torusRadius / 2 * 3;
+            return Mathf.Pow(
+               Mathf.Sqrt(
+                   Mathf.Pow(position.x - torusPosition.x, 2)
+                   + Mathf.Pow(position.y - torusPosition.y, 2)
+               )
+               - torusTubeRadius
+               , 2)
+           + Mathf.Pow(position.z - torusPosition.z, 2)
+           - Mathf.Pow(torusRadius, 2);
+        }
+
+        public float Sphere(Vector3 position)
+        {
+            var spherePosition = new Vector3(Size.x / 2, Size.y / 2, Size.z / 2);
+            var sphereRadius = Size.x / 4;
+
+            return Mathf.Sqrt(Mathf.Pow(position.x - spherePosition.x, 2) +
+                                    Mathf.Pow(position.y - spherePosition.y, 2) +
+                                    Mathf.Pow(position.z - spherePosition.z, 2)) - sphereRadius;
         }
 
         public bool FeaturePoint(Vector3 position, out Vector3 featurePoint)
@@ -174,7 +185,7 @@ namespace Assets
                         featurePoints[k3]
                     });
 
-                    if (Voxels[GetIndex(k0 + new Vector3(1, 0, 1))].Density < 0)
+                    if (Voxels[GetIndex(k0 + new Vector3(1, 0, 1))].Density > 0)
                     {
                         indices.AddRange(new[]
                         {
@@ -201,7 +212,7 @@ namespace Assets
                         });
                     }
                 }
-                
+
                 k1 = k0 + new Vector3Int(0, 0, 1);
                 k2 = k0 + new Vector3Int(0, 1, 1);
                 k3 = k0 + new Vector3Int(0, 1, 0);
@@ -218,7 +229,7 @@ namespace Assets
                         featurePoints[k3]
                     });
 
-                    if (Voxels[GetIndex(k0 + new Vector3(0, 1, 1))].Density < 0)
+                    if (Voxels[GetIndex(k0 + new Vector3(0, 1, 1))].Density > 0)
                     {
                         indices.AddRange(new[]
                         {
@@ -262,7 +273,7 @@ namespace Assets
                         featurePoints[k3]
                     });
 
-                    if (Voxels[GetIndex(k0+new Vector3(1,1,0))].Density < 0)
+                    if (Voxels[GetIndex(k0 + new Vector3(1, 1, 0))].Density > 0)
                     {
                         indices.AddRange(new[]
                         {
@@ -294,14 +305,6 @@ namespace Assets
             mesh.vertices = vertices.ToArray();
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
-            return mesh;
-        }
-
-        public Mesh ConstructMeshGPU()
-        {
-            var mesh = new Mesh();
-
-
             return mesh;
         }
     }

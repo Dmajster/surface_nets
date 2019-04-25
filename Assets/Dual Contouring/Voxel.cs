@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets
+namespace Assets.Dual_Contouring
 {
     [Serializable]
     public struct Voxel

@@ -1,5 +1,6 @@
-﻿#pragma kernel FindEdges
-//#pragma kernel MakeSurface
+﻿#pragma kernel FindFeaturePoints
+#pragma kernel FindVertices
+#pragma kernel FindIndices
 
 struct Voxel {
 	float Density;
@@ -12,7 +13,7 @@ struct Edge {
 
 float3 Size;
 StructuredBuffer<Voxel> Voxels;
-RWStructuredBuffer<float3> FeaturePoints;
+
 
 int GetIndex(uint3 position) {
 	return (int)(Size.z * position.z + position.y * (Size.x * Size.z) + position.x);
@@ -40,8 +41,11 @@ float InverseLerp(float a, float b, float t) {
 	return 0;
 }
 
+
+RWStructuredBuffer<float3> FeaturePoints;
+
 [numthreads(1, 1, 1)]
-void FindEdges(uint3 position : SV_DispatchThreadID)
+void FindFeaturePoints(uint3 position : SV_DispatchThreadID)
 {
 	float3 featurePoint = float3(0, 0, 0);
 
@@ -101,16 +105,10 @@ void FindEdges(uint3 position : SV_DispatchThreadID)
 	FeaturePoints[GetIndex(position)] = featurePoint;
 }
 
-
-/*
-
 AppendStructuredBuffer<float3> Vertices;
-int VerticesIndex;
-
-AppendStructuredBuffer<int> Tris;
 
 [numthreads(1, 1, 1)]
-void MakeSurface(uint3 position : SV_DispatchThreadID) {
+void FindVertices(uint3 position : SV_DispatchThreadID) {
 	float3 k0 = position;
 	float3 k1 = k0 + float3(1, 0, 0);
 	float3 k2 = k0 + float3(1, 0, 1);
@@ -130,15 +128,19 @@ void MakeSurface(uint3 position : SV_DispatchThreadID) {
 		Vertices.Append(value1);
 		Vertices.Append(value2);
 		Vertices.Append(value3);
-
-		Tris.Append(VerticesIndex - 4);
-		Tris.Append(VerticesIndex - 3);
-		Tris.Append(VerticesIndex - 2);
-
-		Tris.Append(VerticesIndex - 2);
-		Tris.Append(VerticesIndex - 1);
-		Tris.Append(VerticesIndex - 4);
 	}
 }
 
-*/
+AppendStructuredBuffer<int> Tris;
+[numthreads(1, 1, 1)]
+void FindIndices(uint3 position : SV_DispatchThreadID) {
+	int index = position.x * 4;
+
+	Tris.Append(index);
+	Tris.Append(index + 1);
+	Tris.Append(index + 2);
+
+	Tris.Append(index + 2);
+	Tris.Append(index + 1);
+	Tris.Append(index);
+}

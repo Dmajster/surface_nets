@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -88,15 +89,11 @@ namespace Assets.Dual_Contouring
 
             FeaturePointBuffer.GetData(FeaturePoints);
 
-            /*
             ComputeShader.SetBuffer(1, "FeaturePoints", FeaturePointBuffer);
             ComputeShader.SetBuffer(1, "Vertices", VerticesBuffer);
-            ComputeShader.SetBuffer(1, "Tris", TrisBuffer);
-            ComputeShader.SetInt("VerticesIndex", 0);
             ComputeShader.Dispatch(1, (int)Size.x, (int)Size.y, (int)Size.z);
 
             ComputeBuffer.CopyCount(VerticesBuffer, VerticesArgumentBuffer, 0);
-            ComputeBuffer.CopyCount(TrisBuffer, TrisArgumentBuffer, 0);
 
             var verticeArguments = new int[4];
             VerticesArgumentBuffer.GetData(verticeArguments);
@@ -104,9 +101,12 @@ namespace Assets.Dual_Contouring
 
             var vertices = new Vector3[verticeArguments[0]];
             VerticesBuffer.GetData(vertices);
-            
 
+            ComputeShader.SetBuffer(2, "Vertices", VerticesBuffer);
+            ComputeShader.SetBuffer(2, "Tris", TrisBuffer);
+            ComputeShader.Dispatch(2, verticeArguments[0]/4, 1, 1);
 
+            ComputeBuffer.CopyCount(TrisBuffer, TrisArgumentBuffer, 0);
 
             var trisArguments = new int[4];
             TrisArgumentBuffer.GetData(trisArguments);
@@ -117,7 +117,7 @@ namespace Assets.Dual_Contouring
             
             mesh.vertices = vertices;
             mesh.triangles = tris;
-            */
+
             return mesh;
         }
 

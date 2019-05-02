@@ -16,7 +16,7 @@ namespace Assets.Dual_Contouring
             MeshFilter = GetComponent<MeshFilter>();
             MeshRenderer = GetComponent<MeshRenderer>();
 
-            Chunk = new Chunk(Vector3.zero, new Vector3(32,32,32));
+            Chunk = new Chunk(Vector3.zero, new Vector3(8,8,8));
             Chunk.PopulateSphere();
 
             var start = Time.realtimeSinceStartup;

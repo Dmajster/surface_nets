@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -36,11 +35,11 @@ namespace Assets.Dual_Contouring
 
             var indirectArray = new[] { 0, 1, 0, 0 };
 
-            VerticesBuffer = new ComputeBuffer(Voxels.Length, Marshal.SizeOf<Vector3>(), ComputeBufferType.Append);
+            VerticesBuffer = new ComputeBuffer(Voxels.Length*4, Marshal.SizeOf<Vector3>(), ComputeBufferType.Append);
             VerticesArgumentBuffer = new ComputeBuffer(4, sizeof(int), ComputeBufferType.IndirectArguments);
             VerticesArgumentBuffer.SetData(indirectArray);
 
-            TrisBuffer = new ComputeBuffer(Voxels.Length, sizeof(int), ComputeBufferType.Append);
+            TrisBuffer = new ComputeBuffer(Voxels.Length*6, sizeof(int), ComputeBufferType.Append);
             TrisArgumentBuffer = new ComputeBuffer(4, sizeof(int), ComputeBufferType.IndirectArguments);
             TrisArgumentBuffer.SetData(indirectArray);
         }
@@ -48,6 +47,16 @@ namespace Assets.Dual_Contouring
         public int GetIndex(Vector3 position)
         {
             return (int)(Size.z * position.z + position.y * (Size.x * Size.z) + position.x);
+        }
+
+
+        public Vector3 GetPosition(int index)
+        {
+            return new Vector3(
+                (int)(index % Size.z),
+                (int)(index / (Size.x * Size.z)),
+                (int)(index % (Size.x * Size.z) / Size.z)
+            );
         }
 
         public int Sign(float value) => value > 0 ? 1 : value < 0 ? -1 : 0;
@@ -86,7 +95,6 @@ namespace Assets.Dual_Contouring
             ComputeShader.SetBuffer(0, "Voxels", VoxelBuffer);
             ComputeShader.SetBuffer(0, "FeaturePoints", FeaturePointBuffer);
             ComputeShader.Dispatch(0, (int)Size.x, (int)Size.y, (int)Size.z);
-
             FeaturePointBuffer.GetData(FeaturePoints);
 
             ComputeShader.SetBuffer(1, "FeaturePoints", FeaturePointBuffer);
@@ -97,13 +105,13 @@ namespace Assets.Dual_Contouring
 
             var verticeArguments = new int[4];
             VerticesArgumentBuffer.GetData(verticeArguments);
-            Debug.Log(verticeArguments[0]);
 
-            var vertices = new Vector3[verticeArguments[0]];
+            var vertices = new Vector3[verticeArguments[0]*4];
             VerticesBuffer.GetData(vertices);
 
+            /*
             ComputeShader.SetBuffer(2, "Vertices", VerticesBuffer);
-            ComputeShader.SetBuffer(2, "Tris", TrisBuffer);
+            ComputeShader.SetBuffer(2, "Indices", TrisBuffer);
             ComputeShader.Dispatch(2, verticeArguments[0]/4, 1, 1);
 
             ComputeBuffer.CopyCount(TrisBuffer, TrisArgumentBuffer, 0);
@@ -112,14 +120,19 @@ namespace Assets.Dual_Contouring
             TrisArgumentBuffer.GetData(trisArguments);
             Debug.Log(trisArguments[0]);
 
-            var tris = new int[trisArguments[0]];
+            var tris = new int[trisArguments[0]*6];
             TrisBuffer.GetData(tris);
-            
+            */
+
+            Debug.Log("gpu vert: " + vertices.Length);
+            //Debug.Log("gpu indices: " + tris.Length);
             mesh.vertices = vertices;
-            mesh.triangles = tris;
+            //mesh.triangles = tris;
 
             return mesh;
         }
+
+
 
         private void OnDestroy()
         {

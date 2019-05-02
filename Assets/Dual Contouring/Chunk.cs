@@ -13,6 +13,7 @@ namespace Assets.Dual_Contouring
         public Dictionary<Vector3, Vector3> FeaturePoints;
 
         public Voxel[] Voxels;
+        public Vector3[] _FeaturePoints;
 
         public Chunk(Vector3 position, Vector3 size)
         {
@@ -20,6 +21,7 @@ namespace Assets.Dual_Contouring
             Size = size;
 
             FeaturePoints = new Dictionary<Vector3, Vector3>();
+            _FeaturePoints = new Vector3[(int)size.x * (int)size.y * (int)size.z];
             Voxels = new Voxel[(int)size.x * (int)size.y * (int)size.z];
         }
 
@@ -47,7 +49,7 @@ namespace Assets.Dual_Contouring
                 {
                     for (var z = 0; z < Size.z; z++)
                     {
-                        Voxels[GetIndex(new Vector3(x, y, z))].Density = Torus(new Vector3(x, y, z));
+                        Voxels[GetIndex(new Vector3(x, y, z))].Density = Sphere(new Vector3(x, y, z));
                     }
                 }
             }
@@ -55,7 +57,7 @@ namespace Assets.Dual_Contouring
 
         public float Torus(Vector3 position)
         {
-            var torusPosition = new Vector3(Size.x/2, Size.y/2, Size.z/2);
+            var torusPosition = new Vector3(Size.x / 2, Size.y / 2, Size.z / 2);
             var torusRadius = Size.x / 8;
             var torusTubeRadius = torusRadius / 2 * 3;
             return Mathf.Pow(
@@ -157,12 +159,12 @@ namespace Assets.Dual_Contouring
                 var position = GetPosition(i);
                 if (FeaturePoint(position, out var featurePoint))
                 {
+                    _FeaturePoints[GetIndex(position)] = featurePoint;
                     featurePoints.Add(position, featurePoint);
                 }
             }
 
             FeaturePoints = featurePoints;
-
             var vertices = new List<Vector3>();
             var indices = new List<int>();
 
@@ -179,37 +181,37 @@ namespace Assets.Dual_Contouring
                 {
                     vertices.AddRange(new[]
                     {
-                        featurePoints[k0],
-                        featurePoints[k1],
-                        featurePoints[k2],
-                        featurePoints[k3]
-                    });
+                   featurePoints[k0],
+                   featurePoints[k1],
+                   featurePoints[k2],
+                   featurePoints[k3]
+               });
 
                     if (Voxels[GetIndex(k0 + new Vector3(1, 0, 1))].Density > 0)
                     {
                         indices.AddRange(new[]
                         {
-                            vertices.Count - 4,
-                            vertices.Count - 3,
-                            vertices.Count - 2,
+                       vertices.Count - 4,
+                       vertices.Count - 3,
+                       vertices.Count - 2,
 
-                            vertices.Count - 2,
-                            vertices.Count - 1,
-                            vertices.Count - 4
-                        });
+                       vertices.Count - 2,
+                       vertices.Count - 1,
+                       vertices.Count - 4
+                   });
                     }
                     else
                     {
                         indices.AddRange(new[]
                         {
-                            vertices.Count - 2,
-                            vertices.Count - 3,
-                            vertices.Count - 4,
+                       vertices.Count - 2,
+                       vertices.Count - 3,
+                       vertices.Count - 4,
 
-                            vertices.Count - 4,
-                            vertices.Count - 1,
-                            vertices.Count - 2
-                        });
+                       vertices.Count - 4,
+                       vertices.Count - 1,
+                       vertices.Count - 2
+                   });
                     }
                 }
 
@@ -223,37 +225,37 @@ namespace Assets.Dual_Contouring
                 {
                     vertices.AddRange(new[]
                     {
-                        featurePoints[k0],
-                        featurePoints[k1],
-                        featurePoints[k2],
-                        featurePoints[k3]
-                    });
+                   featurePoints[k0],
+                   featurePoints[k1],
+                   featurePoints[k2],
+                   featurePoints[k3]
+               });
 
                     if (Voxels[GetIndex(k0 + new Vector3(0, 1, 1))].Density > 0)
                     {
                         indices.AddRange(new[]
                         {
-                            vertices.Count - 4,
-                            vertices.Count - 3,
-                            vertices.Count - 2,
+                       vertices.Count - 4,
+                       vertices.Count - 3,
+                       vertices.Count - 2,
 
-                            vertices.Count - 2,
-                            vertices.Count - 1,
-                            vertices.Count - 4
-                        });
+                       vertices.Count - 2,
+                       vertices.Count - 1,
+                       vertices.Count - 4
+                   });
                     }
                     else
                     {
                         indices.AddRange(new[]
                         {
-                            vertices.Count - 2,
-                            vertices.Count - 3,
-                            vertices.Count - 4,
+                       vertices.Count - 2,
+                       vertices.Count - 3,
+                       vertices.Count - 4,
 
-                            vertices.Count - 4,
-                            vertices.Count - 1,
-                            vertices.Count - 2
-                        });
+                       vertices.Count - 4,
+                       vertices.Count - 1,
+                       vertices.Count - 2
+                   });
                     }
                 }
 
@@ -267,44 +269,49 @@ namespace Assets.Dual_Contouring
                 {
                     vertices.AddRange(new[]
                     {
-                        featurePoints[k0],
-                        featurePoints[k1],
-                        featurePoints[k2],
-                        featurePoints[k3]
-                    });
+                   featurePoints[k0],
+                   featurePoints[k1],
+                   featurePoints[k2],
+                   featurePoints[k3]
+               });
 
                     if (Voxels[GetIndex(k0 + new Vector3(1, 1, 0))].Density > 0)
                     {
                         indices.AddRange(new[]
                         {
-                            vertices.Count - 4,
-                            vertices.Count - 3,
-                            vertices.Count - 2,
+                       vertices.Count - 4,
+                       vertices.Count - 3,
+                       vertices.Count - 2,
 
-                            vertices.Count - 2,
-                            vertices.Count - 1,
-                            vertices.Count - 4
-                        });
+                       vertices.Count - 2,
+                       vertices.Count - 1,
+                       vertices.Count - 4
+                   });
                     }
                     else
                     {
                         indices.AddRange(new[]
                         {
-                            vertices.Count - 2,
-                            vertices.Count - 3,
-                            vertices.Count - 4,
+                       vertices.Count - 2,
+                       vertices.Count - 3,
+                       vertices.Count - 4,
 
-                            vertices.Count - 4,
-                            vertices.Count - 1,
-                            vertices.Count - 2
-                        });
+                       vertices.Count - 4,
+                       vertices.Count - 1,
+                       vertices.Count - 2
+                   });
                     }
                 }
+
             }
+
+            Debug.Log("cpu vert: " + vertices.Count);
+            Debug.Log("cpu indices: " + indices.Count);
 
             mesh.vertices = vertices.ToArray();
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
+
             return mesh;
         }
     }

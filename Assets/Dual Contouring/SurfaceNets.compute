@@ -123,7 +123,7 @@ struct QuadVertices {
 	float3 vertice4;
 };
 
-AppendStructuredBuffer<QuadVertices> Vertices;
+AppendStructuredBuffer<QuadVertices> Quads;
 
 [numthreads(1, 1, 1)]
 void FindVertices(uint3 position : SV_DispatchThreadID) {
@@ -149,7 +149,7 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 			value3
 		};
 
-		Vertices.Append(newQuad);
+		Quads.Append(newQuad);
 	} 
 
 
@@ -174,7 +174,7 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 			value3
 		};
 
-		Vertices.Append(newQuad);
+		Quads.Append(newQuad);
 	} 
 
 	k1 = k0 + float3(0, 0, 1);
@@ -198,7 +198,7 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 			value3
 		};
 
-		Vertices.Append(newQuad);
+		Quads.Append(newQuad);
 	} 
 }
 
@@ -212,11 +212,10 @@ struct QuadIndices {
 	int Index6;
 };
 
-AppendStructuredBuffer<QuadIndices> Indices;
+RWStructuredBuffer<QuadIndices> Indices;
 
 [numthreads(1, 1, 1)]
 void FindIndices(uint3 position : SV_DispatchThreadID) {
-/*
 	int index = position.x * 4;
 
 	QuadIndices newIndices = {
@@ -228,6 +227,5 @@ void FindIndices(uint3 position : SV_DispatchThreadID) {
 			index
 	};
 
-	Indices[index*6] = newIndices;
-*/
+	Indices[position.x] = newIndices;
 }

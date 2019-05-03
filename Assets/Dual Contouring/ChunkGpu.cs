@@ -97,9 +97,10 @@ namespace Assets.Dual_Contouring
             ComputeShader.SetBuffer(0, "FeaturePoints", FeaturePointBuffer); //Bind the output buffer to the 0th kernel
             ComputeShader.Dispatch(0, (int)Size.x, (int)Size.y, (int)Size.z); //Dispatch the task to cores, one for each voxel of the mesh? 
 
-            FeaturePointBuffer.GetData(FeaturePoints); //TODO: COMMENT OUT, USED ONLY FOR OUTPUT VISUALIZATION 
+            //FeaturePointBuffer.GetData(FeaturePoints); //TODO: COMMENT OUT, USED ONLY FOR OUTPUT VISUALIZATION 
 
             //PART 2 - CONSTRUCT THE MESH QUADS 
+            ComputeShader.SetBuffer(1, "Voxels", VoxelBuffer);
             ComputeShader.SetBuffer(1, "FeaturePoints", FeaturePointBuffer); //Bind the output buffer of kernel 0 to kernel 1
             ComputeShader.SetBuffer(1, "Quads", QuadsBuffer); //Output buffer containing actual quads of the mesh
             ComputeShader.Dispatch(1, (int)Size.x, (int)Size.y, (int)Size.z); //Dispatch the task to cores, one for each voxel of the mesh? 

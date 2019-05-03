@@ -142,14 +142,28 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 		value2.x != 0 && value2.y != 0 && value2.z != 0 &&
 		value3.x != 0 && value3.y != 0 && value3.z != 0 ){
 
-		QuadVertices newQuad = {
-			value0,
-			value1,
-			value2,
-			value3
-		};
+		int densityIndex = GetIndex(k2);
 
-		Quads.Append(newQuad);
+		if ( Voxels[densityIndex].Density > 0)
+		{
+			QuadVertices newQuad = {
+				value0,
+				value1,
+				value2,
+				value3
+			};
+			Quads.Append(newQuad);
+		}
+		else
+		{
+			QuadVertices newQuad = {
+				value0,
+				value3,
+				value2,
+				value1
+			};
+			Quads.Append(newQuad);
+		}
 	} 
 
 
@@ -167,14 +181,28 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 		value2.x != 0 && value2.y != 0 && value2.z != 0 &&
 		value3.x != 0 && value3.y != 0 && value3.z != 0 ){
 
-		QuadVertices newQuad = {
-			value0,
-			value1,
-			value2,
-			value3
-		};
+		int densityIndex = GetIndex(k2);
 
-		Quads.Append(newQuad);
+		if ( Voxels[densityIndex].Density > 0)
+		{
+			QuadVertices newQuad = {
+				value0,
+				value1,
+				value2,
+				value3
+			};
+			Quads.Append(newQuad);
+		}
+		else
+		{
+			QuadVertices newQuad = {
+				value0,
+				value3,
+				value2,
+				value1
+			};
+			Quads.Append(newQuad);
+		}
 	} 
 
 	k1 = k0 + float3(0, 0, 1);
@@ -191,14 +219,28 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 		value2.x != 0 && value2.y != 0 && value2.z != 0 &&
 		value3.x != 0 && value3.y != 0 && value3.z != 0 ){
 
-		QuadVertices newQuad = {
-			value0,
-			value1,
-			value2,
-			value3
-		};
+		int densityIndex = GetIndex(k2);
 
-		Quads.Append(newQuad);
+		if ( Voxels[densityIndex].Density > 0)
+		{
+			QuadVertices newQuad = {
+				value0,
+				value1,
+				value2,
+				value3
+			};
+			Quads.Append(newQuad);
+		}
+		else
+		{
+			QuadVertices newQuad = {
+				value0,
+				value3,
+				value2,
+				value1
+			};
+			Quads.Append(newQuad);
+		}
 	} 
 }
 

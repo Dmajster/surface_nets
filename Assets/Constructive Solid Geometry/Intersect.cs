@@ -13,6 +13,9 @@ namespace Assets.Constructive_Solid_Geometry
 
         public Intersect(ISignedDistanceFunction sdf1, ISignedDistanceFunction sdf2)
         {
+            Minimum = Vector3.Min(sdf1.Minimum, sdf2.Minimum);
+            Maximum = Vector3.Max(sdf1.Maximum, sdf2.Maximum);
+
             Sdf1 = sdf1;
             Sdf2 = sdf2;
         }

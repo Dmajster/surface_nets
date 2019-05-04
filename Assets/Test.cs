@@ -6,22 +6,62 @@ namespace Assets
 {
     public class Test : MonoBehaviour
     {
+        public SdfSphere Sphere;
+        public SdfSphere Sphere2;
+
+        private ChunkManager _chunkManager;
+
         public void Start()
         {
-            var chunkManager = FindObjectOfType<ChunkManager>();
+            _chunkManager = FindObjectOfType<ChunkManager>();
 
             //var terrain = new SDFTerrain();
-            var sphere = new SdfSphere(new Vector3(32, 32, 32), 30);
-            var sphere2 = new SdfSphere(new Vector3(56, 45, 32), 25);
-            var union = new Difference(sphere, sphere2);
+            
+        }
 
-            for (var i = 0; i < chunkManager.Chunks.Length; i++)
+        public bool Forward = true;
+        public float X = 16;
+        public float Speed = 10;
+
+        public void Update()
+        {
+            if ( Forward )
             {
-                chunkManager.CreateChunk(i);
-                var chunk = chunkManager.Chunks[i];
-                chunkManager.PopulateChunk(chunk, union);
-                chunkManager.RenderChunk(chunk);
+                if (X > 128)
+                {
+                    Forward = false;
+                }
+
+                
             }
+            else
+            {
+                if (X < 0)
+                {
+                    Forward = true;
+                }
+            }
+
+            X += (Forward ? Speed : -Speed) * Time.deltaTime;
+
+            Sphere = new SdfSphere(new Vector3(X, 16, 16), 8);
+
+            _chunkManager.UpdateChunks(Sphere);
+        }
+
+
+        public void OnDrawGizmos()
+        {
+            if (Sphere == null)
+            {
+                return;
+            }
+            
+            var center = Vector3.Lerp(Sphere.Minimum, Sphere.Maximum, 0.5f);
+            var size = Sphere.Maximum - Sphere.Minimum;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(center, size);
         }
     }
 }

@@ -12,6 +12,9 @@ namespace Assets.Constructive_Solid_Geometry
 
         public Negate(ISignedDistanceFunction sdf)
         {
+            Minimum = sdf.Minimum;
+            Maximum = sdf.Maximum;
+
             Sdf = sdf;
         }
 

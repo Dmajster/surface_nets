@@ -7,10 +7,12 @@ namespace Assets.Signed_Distance_Function
     {
         public Vector3 Minimum { get; set; }
         public Vector3 Maximum { get; set; }
-        
+
 
         public SdfTerrain()
         {
+            Minimum = new Vector3(float.NegativeInfinity, 0, float.NegativeInfinity);
+            Maximum = new Vector3(float.PositiveInfinity, 128 + 64 + 32 + 16, float.PositiveInfinity);
         }
 
         public float Value(Vector3 position)

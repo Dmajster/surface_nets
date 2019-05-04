@@ -1,7 +1,7 @@
 ﻿using Assets.Dual_Contouring;
 using Assets.Dual_Contouring.Structs;
-using System;
 using Assets.Signed_Distance_Function.Interface;
+using System;
 using UnityEngine;
 
 namespace Assets
@@ -31,6 +31,9 @@ namespace Assets
 
         public bool DrawChunks;
 
+        public Vector3 EffectMinimum;
+        public Vector3 EffectMaximum;
+
         public void Awake()
         {
             ChunkMeshGenerator = GetComponent<ChunkMeshGenerator>();
@@ -40,6 +43,13 @@ namespace Assets
         public void OnDrawGizmos()
         {
             DrawChunkBoundingBoxes();
+            DrawEffectArea();
+        }
+
+        private void DrawEffectArea()
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireCube(Vector3.Lerp(EffectMinimum, EffectMaximum, 0.5f), EffectMaximum - EffectMinimum);
         }
 
         public int GetIndex(Vector3 position)
@@ -56,7 +66,7 @@ namespace Assets
 
         public void CreateChunk(int index)
         {
-            if ( index >= Chunks.Length)
+            if (index >= Chunks.Length)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -71,7 +81,7 @@ namespace Assets
                 position.z * ChunkSize.z
             );
 
-            newGameObject.transform.position = worldPosition; 
+            newGameObject.transform.position = worldPosition;
 
             var newMeshFilter = newGameObject.AddComponent<MeshFilter>();
             var newMeshRenderer = newGameObject.AddComponent<MeshRenderer>();
@@ -83,13 +93,61 @@ namespace Assets
             Chunks[index].ChunkData = newChunkData;
         }
 
-        public void PopulateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
+        public void UpdateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
         {
             for (var i = 0; i < chunk.ChunkData.Voxels.Length; i++)
             {
                 var position = chunk.ChunkData.Position + chunk.ChunkData.GetPosition(i);
 
                 chunk.ChunkData.Voxels[i].Density = sdf.Value(position);
+            }
+        }
+
+        public void UpdateChunks(ISignedDistanceFunction sdf)
+        {
+            var minX = Mathf.FloorToInt(sdf.Minimum.x / ChunkSize.x);
+            var maxX = Mathf.CeilToInt(sdf.Maximum.x / ChunkSize.x);
+
+            var minY = Mathf.FloorToInt(sdf.Minimum.y / ChunkSize.y);
+            var maxY = Mathf.CeilToInt(sdf.Maximum.y / ChunkSize.y);
+
+            var minZ = Mathf.FloorToInt(sdf.Minimum.z / ChunkSize.z);
+            var maxZ = Mathf.CeilToInt(sdf.Maximum.z / ChunkSize.z);
+
+            EffectMaximum = new Vector3(maxX * ChunkSize.x, maxY * ChunkSize.y, maxZ * ChunkSize.z);
+            EffectMinimum = new Vector3(minX * ChunkSize.x, minY * ChunkSize.y, minZ * ChunkSize.z);
+
+            for (var x = minX; x < maxX; x++)
+            {
+                for (var y = minY; y < maxY; y++)
+                {
+                    for (var z = minZ; z < maxZ; z++)
+                    {
+                        var position = new Vector3(x, y, z);
+                        var index = GetIndex(position);
+
+                        if (index < 0 || index >= Chunks.Length)
+                        {
+                            continue;
+                        }
+
+                        //Debug.Log($"{index} > {Chunks.Length}");
+
+                        
+
+                        if (Chunks[index].GameObject == null)
+                        {
+                            CreateChunk(position);
+                        }
+
+                        var chunk = Chunks[index];
+
+                        chunk.Status = ChunkStatus.Active;
+
+                        UpdateChunk(chunk, sdf);
+                        RenderChunk(chunk);
+                    }
+                }
             }
         }
 
@@ -102,9 +160,9 @@ namespace Assets
         public Vector3 GetPosition(int index)
         {
             return new Vector3(
-                (int) (index % Size.z),
-                (int) (index / (Size.x * Size.z)),
-                (int) (index % (Size.x * Size.z) / Size.z)
+                 index % Size.z,
+                 index / (Size.x * Size.z),
+                 index % (Size.x * Size.z) / Size.z
             );
         }
 
@@ -145,7 +203,7 @@ namespace Assets
                                 break;
                         }
 
-                        Gizmos.DrawWireCube(position, ChunkSize );
+                        Gizmos.DrawWireCube(position, ChunkSize);
                     }
                 }
             }

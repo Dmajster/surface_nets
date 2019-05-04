@@ -34,6 +34,9 @@ namespace Assets
         public Vector3 EffectMinimum;
         public Vector3 EffectMaximum;
 
+        public Vector3 ChunkEffectMinimum;
+        public Vector3 ChunkEffectMaximum;
+
         public void Awake()
         {
             ChunkMeshGenerator = GetComponent<ChunkMeshGenerator>();
@@ -44,12 +47,19 @@ namespace Assets
         {
             DrawChunkBoundingBoxes();
             DrawEffectArea();
+            DrawVoxelEffectArea();
         }
 
         private void DrawEffectArea()
         {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireCube(Vector3.Lerp(EffectMinimum, EffectMaximum, 0.5f), EffectMaximum - EffectMinimum);
+        }
+
+        private void DrawVoxelEffectArea()
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(Vector3.Lerp(ChunkEffectMinimum, ChunkEffectMaximum, 0.5f), ChunkEffectMaximum - ChunkEffectMinimum);
         }
 
         public int GetIndex(Vector3 position)
@@ -95,12 +105,36 @@ namespace Assets
 
         public void UpdateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
         {
+            var minX = Mathf.FloorToInt((sdf.Minimum.x - chunk.ChunkData.Position.x) / chunk.ChunkData.Size.x);
+            var maxX = Mathf.CeilToInt((sdf.Maximum.x - chunk.ChunkData.Position.x) / chunk.ChunkData.Size.x);
+
+            var minY = Mathf.FloorToInt((sdf.Minimum.y - chunk.ChunkData.Position.y) / chunk.ChunkData.Size.y);
+            var maxY = Mathf.CeilToInt((sdf.Maximum.y - chunk.ChunkData.Position.y) / chunk.ChunkData.Size.y);
+
+            var minZ = Mathf.FloorToInt((sdf.Minimum.z - chunk.ChunkData.Position.z) / chunk.ChunkData.Size.z);
+            var maxZ = Mathf.CeilToInt((sdf.Maximum.z - chunk.ChunkData.Position.z) / chunk.ChunkData.Size.z);
+
+            for (var x = minX; x < maxX; x++)
+            {
+                for (var y = minY; y < maxY; y++)
+                {
+                    for (var z = minZ; z < maxZ; z++)
+                    {
+                        var position = new Vector3(x, y, z);
+                        var worldPosition = chunk.ChunkData.Position + position;
+                        chunk.ChunkData.Voxels[chunk.ChunkData.GetIndex(position)].Density = sdf.Value(worldPosition);
+                    }
+                }
+            }
+
+            /*
             for (var i = 0; i < chunk.ChunkData.Voxels.Length; i++)
             {
                 var position = chunk.ChunkData.Position + chunk.ChunkData.GetPosition(i);
 
                 chunk.ChunkData.Voxels[i].Density = sdf.Value(position);
             }
+            */
         }
 
         public void UpdateChunks(ISignedDistanceFunction sdf)
@@ -133,7 +167,7 @@ namespace Assets
 
                         //Debug.Log($"{index} > {Chunks.Length}");
 
-                        
+
 
                         if (Chunks[index].GameObject == null)
                         {

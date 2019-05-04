@@ -149,6 +149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e2c616dec9cb248a7e448e6673a6eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Forward: 1
+  X: 0
+  Speed: 10
 --- !u!4 &121626044
 Transform:
   m_ObjectHideFlags: 0
@@ -407,17 +410,32 @@ PrefabInstance:
     - target: {fileID: 3795015159419959660, guid: 7c19087b89c6ab54b9cded864c918975,
         type: 3}
       propertyPath: Size.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795015159419959660, guid: 7c19087b89c6ab54b9cded864c918975,
+        type: 3}
+      propertyPath: Size.y
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3795015159419959660, guid: 7c19087b89c6ab54b9cded864c918975,
         type: 3}
       propertyPath: Size.z
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3795015159419959660, guid: 7c19087b89c6ab54b9cded864c918975,
         type: 3}
-      propertyPath: DrawChunks
-      value: 1
+      propertyPath: ChunkSize.x
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795015159419959660, guid: 7c19087b89c6ab54b9cded864c918975,
+        type: 3}
+      propertyPath: ChunkSize.y
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795015159419959660, guid: 7c19087b89c6ab54b9cded864c918975,
+        type: 3}
+      propertyPath: ChunkSize.z
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c19087b89c6ab54b9cded864c918975, type: 3}

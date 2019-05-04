@@ -7,8 +7,9 @@ namespace Assets.Dual_Contouring.Structs
     public class Chunk
     {
         public readonly Voxel[] Voxels;
-        public readonly Vector3 Position;
-        public readonly Vector3 Size;
+        
+        public Vector3 Position;
+        public Vector3 Size;
 
         public Chunk(Vector3 size, Vector3 position)
         {

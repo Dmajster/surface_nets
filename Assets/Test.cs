@@ -44,7 +44,7 @@ namespace Assets
 
             X += (Forward ? Speed : -Speed) * Time.deltaTime;
 
-            Sphere = new SdfSphere(new Vector3(X, 16, 16), 8);
+            Sphere = new SdfSphere(new Vector3(X, 16, 32), 8);
 
             _chunkManager.UpdateChunks(Sphere);
         }

@@ -75,9 +75,10 @@ namespace Assets
 
             var newMeshFilter = newGameObject.AddComponent<MeshFilter>();
             var newMeshRenderer = newGameObject.AddComponent<MeshRenderer>();
+            newMeshRenderer.material = ChunkMeshGenerator.ChunkMaterial;
             var newChunkData = new Chunk(ChunkSize, worldPosition);
 
-            Debug.Log(index);
+            //Debug.Log(index);
             Chunks[index].GameObject = newGameObject;
             Chunks[index].ChunkData = newChunkData;
         }

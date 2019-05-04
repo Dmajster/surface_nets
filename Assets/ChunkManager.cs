@@ -1,6 +1,7 @@
 ﻿using Assets.Dual_Contouring;
 using Assets.Dual_Contouring.Structs;
 using System;
+using Assets.Signed_Distance_Function.Interface;
 using UnityEngine;
 
 namespace Assets
@@ -30,15 +31,10 @@ namespace Assets
 
         public bool DrawChunks;
 
-        public void Start()
+        public void Awake()
         {
             ChunkMeshGenerator = GetComponent<ChunkMeshGenerator>();
             Chunks = new ChunkGameObject[Size.x * Size.y * Size.z];
-
-            for (var i = 0; i < Chunks.Length; i++)
-            {
-                CreateChunk(i);
-            }
         }
 
         public void OnDrawGizmos()
@@ -60,7 +56,7 @@ namespace Assets
 
         public void CreateChunk(int index)
         {
-            if ( index > Chunks.Length)
+            if ( index >= Chunks.Length)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -68,22 +64,39 @@ namespace Assets
             var position = GetPosition(index);
             var newGameObject = new GameObject($"Chunk ({position.x},{position.y},{position.z})");
             newGameObject.transform.parent = transform;
-            newGameObject.transform.position = new Vector3(
+
+            var worldPosition = new Vector3(
                 position.x * ChunkSize.x,
                 position.y * ChunkSize.y,
                 position.z * ChunkSize.z
             );
 
+            newGameObject.transform.position = worldPosition; 
+
             var newMeshFilter = newGameObject.AddComponent<MeshFilter>();
             var newMeshRenderer = newGameObject.AddComponent<MeshRenderer>();
-            var newChunkData = new Chunk(ChunkSize);
+            var newChunkData = new Chunk(ChunkSize, worldPosition);
 
-            newMeshFilter.mesh = ChunkMeshGenerator.CreateChunkMesh(newChunkData);
-
+            Debug.Log(index);
             Chunks[index].GameObject = newGameObject;
             Chunks[index].ChunkData = newChunkData;
         }
 
+        public void PopulateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
+        {
+            for (var i = 0; i < chunk.ChunkData.Voxels.Length; i++)
+            {
+                var position = chunk.ChunkData.Position + chunk.ChunkData.GetPosition(i);
+
+                chunk.ChunkData.Voxels[i].Density = sdf.Value(position);
+            }
+        }
+
+        public void RenderChunk(ChunkGameObject chunk)
+        {
+            var meshFilter = chunk.GameObject.GetComponent<MeshFilter>();
+            meshFilter.mesh = ChunkMeshGenerator.CreateChunkMesh(chunk.ChunkData);
+        }
 
         public Vector3 GetPosition(int index)
         {
@@ -131,7 +144,7 @@ namespace Assets
                                 break;
                         }
 
-                        Gizmos.DrawWireCube(position, (Vector3)ChunkSize * 0.95f );
+                        Gizmos.DrawWireCube(position, ChunkSize );
                     }
                 }
             }

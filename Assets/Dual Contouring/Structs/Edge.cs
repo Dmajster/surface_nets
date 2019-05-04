@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Dual_Contouring
+namespace Assets.Dual_Contouring.Structs
 {
     [Serializable]
     public struct Edge

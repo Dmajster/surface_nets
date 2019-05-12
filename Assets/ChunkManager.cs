@@ -2,6 +2,7 @@
 using Assets.Dual_Contouring.Structs;
 using Assets.Signed_Distance_Function.Interface;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets
@@ -113,9 +114,9 @@ namespace Assets
             var maxY = Mathf.Clamp(sdf.Maximum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
             var maxZ = Mathf.Clamp(sdf.Maximum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
 
-            for (var x = minX; x < maxX; x++)
+            Parallel.For((int) minX, (int)maxX, x =>
             {
-                for (var y = minY; y < maxY; y++)
+                Parallel.For((int) minY, (int) maxY, y =>
                 {
                     for (var z = minZ; z < maxZ; z++)
                     {
@@ -124,8 +125,8 @@ namespace Assets
 
                         chunk.ChunkData.Voxels[chunk.ChunkData.GetIndex(position)].Density = sdf.Value(worldPosition);
                     }
-                }
-            }
+                });
+            });
         }
 
         public void UpdateChunks(ISignedDistanceFunction sdf)

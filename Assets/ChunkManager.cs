@@ -105,16 +105,20 @@ namespace Assets
 
         public void UpdateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
         {
-            /*
-            
-            var minX = Mathf.FloorToInt((sdf.Minimum.x - chunk.ChunkData.Position.x) / chunk.ChunkData.Size.x);
-            var maxX = Mathf.CeilToInt((sdf.Maximum.x - chunk.ChunkData.Position.x) / chunk.ChunkData.Size.x);
+            var minX = 0f;
+            var maxX = chunk.ChunkData.Size.x;
+            var minY = 0f;
+            var maxY = chunk.ChunkData.Size.y;
+            var minZ = 0f;
+            var maxZ = chunk.ChunkData.Size.z;
 
-            var minY = Mathf.FloorToInt((sdf.Minimum.y - chunk.ChunkData.Position.y) / chunk.ChunkData.Size.y);
-            var maxY = Mathf.CeilToInt((sdf.Maximum.y - chunk.ChunkData.Position.y) / chunk.ChunkData.Size.y);
+            minX = Mathf.Clamp(sdf.Minimum.x - chunk.ChunkData.Position.x, 0, chunk.ChunkData.Size.x);
+            minY = Mathf.Clamp(sdf.Minimum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
+            minZ = Mathf.Clamp(sdf.Minimum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
 
-            var minZ = Mathf.FloorToInt((sdf.Minimum.z - chunk.ChunkData.Position.z) / chunk.ChunkData.Size.z);
-            var maxZ = Mathf.CeilToInt((sdf.Maximum.z - chunk.ChunkData.Position.z) / chunk.ChunkData.Size.z);
+            maxX = Mathf.Clamp(sdf.Maximum.x - chunk.ChunkData.Position.x, 0, chunk.ChunkData.Size.x);
+            maxY = Mathf.Clamp(sdf.Maximum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
+            maxZ = Mathf.Clamp(sdf.Maximum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
 
             for (var x = minX; x < maxX; x++)
             {
@@ -124,17 +128,10 @@ namespace Assets
                     {
                         var position = new Vector3(x, y, z);
                         var worldPosition = chunk.ChunkData.Position + position;
+
                         chunk.ChunkData.Voxels[chunk.ChunkData.GetIndex(position)].Density = sdf.Value(worldPosition);
                     }
                 }
-            }
-            */
-            /**/
-            for (var i = 0; i < chunk.ChunkData.Voxels.Length; i++)
-            {
-                var position = chunk.ChunkData.Position + chunk.ChunkData.GetPosition(i);
-
-                chunk.ChunkData.Voxels[i].Density = sdf.Value(position);
             }
         }
 

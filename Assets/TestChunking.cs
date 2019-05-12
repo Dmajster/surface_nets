@@ -16,7 +16,12 @@ namespace Assets
 
             var terrain = new SdfTerrain();
 
-            _chunkManager.UpdateChunks(terrain);
+            //var index = _chunkManager.GetIndex(new Vector3(4, 7, 4));
+
+            //_chunkManager.CreateChunk(index);
+            //_chunkManager.UpdateChunk(_chunkManager.Chunks[index], terrain);
+            //_chunkManager.RenderChunk(_chunkManager.Chunks[index]);
+            //_chunkManager.UpdateChunks(terrain);
         }
 
         public bool Forward = true;
@@ -26,28 +31,28 @@ namespace Assets
         public void Update()
         {
 
-            //if (Forward)
-            //{
-            //    if (X > 128)
-            //    {
-            //        Forward = false;
-            //    }
+            if (Forward)
+            {
+                if (X > 128)
+                {
+                    Forward = false;
+                }
 
 
-            //}
-            //else
-            //{
-            //    if (X < 0)
-            //    {
-            //        Forward = true;
-            //    }
-            //}
+            }
+            else
+            {
+                if (X < 0)
+                {
+                    Forward = true;
+                }
+            }
 
-            //X += (Forward ? Speed : -Speed) * Time.deltaTime;
+            X += (Forward ? Speed : -Speed) * Time.deltaTime;
 
-            //Sphere = new SdfSphere(new Vector3(X, 16, 32), 8);
+            Sphere = new SdfSphere(new Vector3(X, 16, 32), 8);
 
-            //_chunkManager.UpdateChunks(Sphere);
+            _chunkManager.UpdateChunks(Sphere);
 
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class Test : MonoBehaviour
+    public class TestChunking : MonoBehaviour
     {
         public SdfSphere Sphere;
         public SdfSphere Sphere2;

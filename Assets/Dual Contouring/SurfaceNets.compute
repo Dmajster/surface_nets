@@ -11,7 +11,7 @@ struct Edge {
 	int Index2;
 };
 
-float3 Size;
+float3 Size = float3(16,16,16);
 StructuredBuffer<Voxel> Voxels;
 
 
@@ -50,7 +50,7 @@ float InverseLerp(float a, float b, float t) {
 
 RWStructuredBuffer<float3> FeaturePoints;
 
-[numthreads(1, 1, 1)]
+[numthreads(8, 8, 8)]
 void FindFeaturePoints(uint3 position : SV_DispatchThreadID)
 {
     if (position.x + 1 >= Size.x || position.y + 1 >= Size.y || position.z + 1 >= Size.z)
@@ -125,7 +125,7 @@ struct QuadVertices {
 
 AppendStructuredBuffer<QuadVertices> Quads;
 
-[numthreads(1, 1, 1)]
+[numthreads(8, 8, 8)]
 void FindVertices(uint3 position : SV_DispatchThreadID) {
 	float3 k0 = position;
 	float3 k1 = k0 + float3(1, 0, 0);

@@ -1,5 +1,4 @@
-﻿using Assets.Constructive_Solid_Geometry;
-using Assets.Signed_Distance_Function;
+﻿using Assets.Signed_Distance_Function;
 using UnityEngine;
 
 namespace Assets
@@ -15,8 +14,9 @@ namespace Assets
         {
             _chunkManager = FindObjectOfType<ChunkManager>();
 
-            //var terrain = new SDFTerrain();
-            
+            var terrain = new SdfTerrain();
+
+            _chunkManager.UpdateChunks(terrain);
         }
 
         public bool Forward = true;
@@ -25,28 +25,30 @@ namespace Assets
 
         public void Update()
         {
-            if ( Forward )
-            {
-                if (X > 128)
-                {
-                    Forward = false;
-                }
 
-                
-            }
-            else
-            {
-                if (X < 0)
-                {
-                    Forward = true;
-                }
-            }
+            //if (Forward)
+            //{
+            //    if (X > 128)
+            //    {
+            //        Forward = false;
+            //    }
 
-            X += (Forward ? Speed : -Speed) * Time.deltaTime;
 
-            Sphere = new SdfSphere(new Vector3(X, 16, 32), 8);
+            //}
+            //else
+            //{
+            //    if (X < 0)
+            //    {
+            //        Forward = true;
+            //    }
+            //}
 
-            _chunkManager.UpdateChunks(Sphere);
+            //X += (Forward ? Speed : -Speed) * Time.deltaTime;
+
+            //Sphere = new SdfSphere(new Vector3(X, 16, 32), 8);
+
+            //_chunkManager.UpdateChunks(Sphere);
+
         }
 
 
@@ -56,7 +58,7 @@ namespace Assets
             {
                 return;
             }
-            
+
             var center = Vector3.Lerp(Sphere.Minimum, Sphere.Maximum, 0.5f);
             var size = Sphere.Maximum - Sphere.Minimum;
 

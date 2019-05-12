@@ -30,7 +30,7 @@ namespace Assets.Dual_Contouring
             ComputeShader.SetVector("Size", chunk.Size); //Set the chunk dimensions on the gpu
             ComputeShader.SetBuffer(0, "Voxels", _voxelBuffer); //Bind the gpu buffer t
             ComputeShader.SetBuffer(0, "FeaturePoints", _featurePointBuffer); //Bind the output buffer to the 0th kernel
-            ComputeShader.Dispatch(0, (int)chunk.Size.x, (int)chunk.Size.y, (int)chunk.Size.z); //Dispatch the task to cores, one for each voxel of the mesh? 
+            ComputeShader.Dispatch(0, (int)chunk.Size.x / 8, (int)chunk.Size.y / 8, (int)chunk.Size.z / 8); //Dispatch the task to cores, one for each voxel of the mesh? 
 
             //FeaturePointBuffer.GetData(FeaturePoints); //TODO: COMMENT OUT, USED ONLY FOR OUTPUT VISUALIZATION 
 
@@ -38,7 +38,7 @@ namespace Assets.Dual_Contouring
             ComputeShader.SetBuffer(1, "Voxels", _voxelBuffer);
             ComputeShader.SetBuffer(1, "FeaturePoints", _featurePointBuffer); //Bind the output buffer of kernel 0 to kernel 1
             ComputeShader.SetBuffer(1, "Quads", _quadsBuffer); //Output buffer containing actual quads of the mesh
-            ComputeShader.Dispatch(1, (int)chunk.Size.x, (int)chunk.Size.y, (int)chunk.Size.z); //Dispatch the task to cores, one for each voxel of the mesh? 
+            ComputeShader.Dispatch(1, (int)chunk.Size.x / 8, (int)chunk.Size.y / 8, (int)chunk.Size.z / 8); //Dispatch the task to cores, one for each voxel of the mesh? 
 
             ComputeBuffer.CopyCount(_quadsBuffer, _verticesArgumentBuffer, 0); //copy the indirect arguments to indirect buffer
 

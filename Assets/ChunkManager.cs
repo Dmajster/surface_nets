@@ -140,14 +140,14 @@ namespace Assets
 
         public void UpdateChunks(ISignedDistanceFunction sdf)
         {
-            var minX = Mathf.FloorToInt(sdf.Minimum.x / ChunkSize.x);
-            var maxX = Mathf.CeilToInt(sdf.Maximum.x / ChunkSize.x);
+            var minX = Mathf.FloorToInt(Mathf.Max(sdf.Minimum.x, 0) / ChunkSize.x);
+            var maxX = Mathf.CeilToInt(Mathf.Min(sdf.Maximum.x, Size.x * ChunkSize.x) / ChunkSize.x);
 
-            var minY = Mathf.FloorToInt(sdf.Minimum.y / ChunkSize.y);
-            var maxY = Mathf.CeilToInt(sdf.Maximum.y / ChunkSize.y);
+            var minY = Mathf.FloorToInt(Mathf.Max(sdf.Minimum.y, 0) / ChunkSize.y);
+            var maxY = Mathf.CeilToInt(Mathf.Min(sdf.Maximum.y, Size.y * ChunkSize.y) / ChunkSize.y);
 
-            var minZ = Mathf.FloorToInt(sdf.Minimum.z / ChunkSize.z);
-            var maxZ = Mathf.CeilToInt(sdf.Maximum.z / ChunkSize.z);
+            var minZ = Mathf.FloorToInt(Mathf.Max(sdf.Minimum.z, 0) / ChunkSize.z);
+            var maxZ = Mathf.CeilToInt(Mathf.Min(sdf.Maximum.z, Size.z * ChunkSize.z) / ChunkSize.z);
 
             EffectMaximum = new Vector3(maxX * ChunkSize.x, maxY * ChunkSize.y, maxZ * ChunkSize.z);
             EffectMinimum = new Vector3(minX * ChunkSize.x, minY * ChunkSize.y, minZ * ChunkSize.z);

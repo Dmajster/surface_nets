@@ -240,8 +240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cd0fc7b0c3bb7f4fb7891346332b470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Size: {x: 64, y: 64, z: 64}
-  RepeatCount: 100
+  Size: {x: 32, y: 32, z: 32}
+  RepeatCount: 1000
   ComputeShader: {fileID: 7200000, guid: 2dad622521c46ab478a09dd92c998d54, type: 3}
 --- !u!4 &757566770
 Transform:

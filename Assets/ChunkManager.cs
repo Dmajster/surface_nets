@@ -105,6 +105,8 @@ namespace Assets
 
         public void UpdateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
         {
+            /*
+            
             var minX = Mathf.FloorToInt((sdf.Minimum.x - chunk.ChunkData.Position.x) / chunk.ChunkData.Size.x);
             var maxX = Mathf.CeilToInt((sdf.Maximum.x - chunk.ChunkData.Position.x) / chunk.ChunkData.Size.x);
 
@@ -126,15 +128,14 @@ namespace Assets
                     }
                 }
             }
-
-            /*
+            */
+            /**/
             for (var i = 0; i < chunk.ChunkData.Voxels.Length; i++)
             {
                 var position = chunk.ChunkData.Position + chunk.ChunkData.GetPosition(i);
 
                 chunk.ChunkData.Voxels[i].Density = sdf.Value(position);
             }
-            */
         }
 
         public void UpdateChunks(ISignedDistanceFunction sdf)

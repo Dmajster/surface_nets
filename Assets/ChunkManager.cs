@@ -105,20 +105,13 @@ namespace Assets
 
         public void UpdateChunk(ChunkGameObject chunk, ISignedDistanceFunction sdf)
         {
-            var minX = 0f;
-            var maxX = chunk.ChunkData.Size.x;
-            var minY = 0f;
-            var maxY = chunk.ChunkData.Size.y;
-            var minZ = 0f;
-            var maxZ = chunk.ChunkData.Size.z;
+            var minX = Mathf.Clamp(sdf.Minimum.x - chunk.ChunkData.Position.x, 0, chunk.ChunkData.Size.x);
+            var minY = Mathf.Clamp(sdf.Minimum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
+            var minZ = Mathf.Clamp(sdf.Minimum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
 
-            minX = Mathf.Clamp(sdf.Minimum.x - chunk.ChunkData.Position.x, 0, chunk.ChunkData.Size.x);
-            minY = Mathf.Clamp(sdf.Minimum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
-            minZ = Mathf.Clamp(sdf.Minimum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
-
-            maxX = Mathf.Clamp(sdf.Maximum.x - chunk.ChunkData.Position.x, 0, chunk.ChunkData.Size.x);
-            maxY = Mathf.Clamp(sdf.Maximum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
-            maxZ = Mathf.Clamp(sdf.Maximum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
+            var maxX = Mathf.Clamp(sdf.Maximum.x - chunk.ChunkData.Position.x, 0, chunk.ChunkData.Size.x);
+            var maxY = Mathf.Clamp(sdf.Maximum.y - chunk.ChunkData.Position.y, 0, chunk.ChunkData.Size.y);
+            var maxZ = Mathf.Clamp(sdf.Maximum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
 
             for (var x = minX; x < maxX; x++)
             {

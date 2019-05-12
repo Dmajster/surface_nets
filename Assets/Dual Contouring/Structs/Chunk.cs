@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Assets.Dual_Contouring.Structs
 {
     [Serializable]
-    public class Chunk
+    public struct Chunk
     {
-        public readonly Voxel[] Voxels;
+        public Voxel[] Voxels;
         
         public Vector3 Position;
         public Vector3 Size;
@@ -16,6 +16,10 @@ namespace Assets.Dual_Contouring.Structs
             Position = position;
             Size = size;
             Voxels = new Voxel[(int)size.x * (int)size.y * (int)size.z];
+            for (var i = 0; i < Voxels.Length; i++)
+            {
+                Voxels[i].Density = float.PositiveInfinity;
+            }
         }
 
         public int GetIndex(Vector3 position)

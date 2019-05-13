@@ -94,6 +94,7 @@ namespace Assets
             );
 
             newGameObject.transform.position = worldPosition;
+            newGameObject.isStatic = true;
 
             var newMeshFilter = newGameObject.AddComponent<MeshFilter>();
             var newMeshRenderer = newGameObject.AddComponent<MeshRenderer>();

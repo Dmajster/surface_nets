@@ -11,7 +11,7 @@ struct Edge {
 	int Index2;
 };
 
-float3 Size = float3(16,16,16);
+float3 Size;
 StructuredBuffer<Voxel> Voxels;
 
 

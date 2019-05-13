@@ -14,13 +14,13 @@ namespace Assets
         {
             _chunkManager = FindObjectOfType<ChunkManager>();
 
-            var terrain = new SdfTerrain();
+            Sphere = new SdfSphere(new Vector3(16, 16, 16), 15f);
 
-            //var index = _chunkManager.GetIndex(new Vector3(4, 7, 4));
+            var index = _chunkManager.GetIndex(new Vector3(0,0,0));
 
-            //_chunkManager.CreateChunk(index);
-            //_chunkManager.UpdateChunk(_chunkManager.Chunks[index], terrain);
-            //_chunkManager.RenderChunk(_chunkManager.Chunks[index]);
+            _chunkManager.CreateChunk(index);
+            _chunkManager.UpdateChunk(_chunkManager.Chunks[index], Sphere);
+            _chunkManager.RenderChunk(_chunkManager.Chunks[index]);
             //_chunkManager.UpdateChunks(terrain);
         }
 
@@ -31,28 +31,28 @@ namespace Assets
         public void Update()
         {
 
-            if (Forward)
-            {
-                if (X > 128)
-                {
-                    Forward = false;
-                }
+            //if (Forward)
+            //{
+            //    if (X > 128)
+            //    {
+            //        Forward = false;
+            //    }
 
 
-            }
-            else
-            {
-                if (X < 0)
-                {
-                    Forward = true;
-                }
-            }
+            //}
+            //else
+            //{
+            //    if (X < 0)
+            //    {
+            //        Forward = true;
+            //    }
+            //}
 
-            X += (Forward ? Speed : -Speed) * Time.deltaTime;
+            //X += (Forward ? Speed : -Speed) * Time.deltaTime;
 
-            Sphere = new SdfSphere(new Vector3(X, 16, 8), 8);
+            //Sphere = new SdfSphere(new Vector3(X, 16, 8), 8);
 
-            _chunkManager.UpdateChunks(Sphere);
+            //_chunkManager.UpdateChunks(Sphere);
 
         }
 

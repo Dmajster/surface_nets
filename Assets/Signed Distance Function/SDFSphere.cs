@@ -17,8 +17,8 @@ namespace Assets.Signed_Distance_Function
             Radius = radius;
 
             var offset = new Vector3(Radius, Radius, Radius);
-            Minimum = Position - offset - Vector3.one;
-            Maximum = Position + offset + Vector3.one;
+            Minimum = Position - offset - Vector3.one * 2;
+            Maximum = Position + offset + Vector3.one * 2;
         }
 
         public float Value(Vector3 position)

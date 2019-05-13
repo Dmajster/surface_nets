@@ -9,6 +9,8 @@ namespace Assets.Dual_Contouring
     {
         public Material ChunkMaterial;
 
+        public int[] Indices;
+
         public ComputeShader ComputeShader;
         private ComputeBuffer _voxelBuffer;
         private ComputeBuffer _featurePointBuffer;
@@ -66,11 +68,14 @@ namespace Assets.Dual_Contouring
             ComputeShader.SetBuffer(2, "Indices", _indicesBuffer);
             ComputeShader.Dispatch(2, quadCount, 1, 1);
 
-            var indices = new int[indicesCount];
-            _indicesBuffer.GetData(indices);
+            //var indices = new int[indicesCount];
+            //_indicesBuffer.GetData(indices);
+
+            Indices = new int[indicesCount];
+            _indicesBuffer.GetData(Indices);
 
             mesh.vertices = vertices;
-            mesh.triangles = indices;
+            mesh.triangles = Indices;
             mesh.RecalculateNormals();
 
             //Debug.Log("gpu vertices: " + mesh.vertices.Length);

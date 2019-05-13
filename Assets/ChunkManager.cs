@@ -117,18 +117,18 @@ namespace Assets
             var maxZ = Mathf.Clamp(sdf.Maximum.z - chunk.ChunkData.Position.z, 0, chunk.ChunkData.Size.z);
 
             Parallel.For((int)minX, (int)maxX, x =>
-          {
-              Parallel.For((int)minY, (int)maxY, y =>
-              {
-                  for (var z = minZ; z < maxZ; z++)
-                  {
-                      var position = new Vector3(x, y, z);
-                      var worldPosition = chunk.ChunkData.Position + position;
+            {
+                Parallel.For((int)minY, (int)maxY, y =>
+                {
+                    for (var z = minZ; z < maxZ; z++)
+                    {
+                        var position = new Vector3(x, y, z);
+                        var worldPosition = chunk.ChunkData.Position + position;
 
-                      chunk.ChunkData.Voxels[chunk.ChunkData.GetIndex(position)].Density = sdf.Value(worldPosition);
-                  }
-              });
-          });
+                        chunk.ChunkData.Voxels[chunk.ChunkData.GetIndex(position)].Density = sdf.Value(worldPosition);
+                    }
+                });
+            });
         }
 
         public void UpdateChunks(ISignedDistanceFunction sdf)

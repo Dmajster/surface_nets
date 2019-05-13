@@ -246,12 +246,12 @@ void FindVertices(uint3 position : SV_DispatchThreadID) {
 
 
 struct QuadIndices {
-	int Index1;
-	int Index2;
-	int Index3;
-	int Index4;
-	int Index5;
-	int Index6;
+	dword  Index1;
+	dword  Index2;
+	dword  Index3;
+	dword  Index4;
+	dword  Index5;
+	dword  Index6;
 };
 
 RWStructuredBuffer<QuadIndices> Indices;
@@ -259,15 +259,17 @@ RWStructuredBuffer<QuadIndices> Indices;
 [numthreads(1, 1, 1)]
 void FindIndices(uint3 position : SV_DispatchThreadID) {
 	int index = position.x * 4;
-
+	
 	QuadIndices newIndices = {
-			index,
-			index+1,
-			index+2,
-			index+2,
-			index+3,
-			index
+		index,
+		index+1,
+		index+2,
+		index+2,
+		index+3,
+		index,
 	};
+
+
 
 	Indices[position.x] = newIndices;
 }

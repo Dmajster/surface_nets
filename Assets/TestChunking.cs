@@ -1,4 +1,5 @@
 ﻿using Assets.Signed_Distance_Function;
+using Assets.Signed_Distance_Function.Interface;
 using UnityEngine;
 
 namespace Assets
@@ -8,14 +9,17 @@ namespace Assets
         public SdfSphere Sphere;
         public SdfSphere Sphere2;
 
+        public ISignedDistanceFunction Terrain;
+
         private ChunkManager _chunkManager;
 
         public void Start()
         {
             _chunkManager = FindObjectOfType<ChunkManager>();
 
-            var terrain = new SdfTerrain();
-            _chunkManager.UpdateChunks(terrain);
+            Terrain = new SdfTerrain();
+
+            _chunkManager.UpdateChunks(Terrain);
         }
 
         public void FixedUpdate()

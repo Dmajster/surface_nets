@@ -21,13 +21,13 @@ namespace Assets.Dual_Contouring
         {
             var mesh = new Mesh();
 
-            _voxelBuffer = new ComputeBuffer(chunk.Voxels.Length, Marshal.SizeOf<Voxel>());
-            _featurePointBuffer = new ComputeBuffer(chunk.Voxels.Length, Marshal.SizeOf<Vector3>());
-            _quadsBuffer = new ComputeBuffer(chunk.Voxels.Length, Marshal.SizeOf<Vector3>() * 4, ComputeBufferType.Append);
+            _voxelBuffer = chunk.ComputeBuffer;
+            _featurePointBuffer = new ComputeBuffer(chunk.GetSize, Marshal.SizeOf<Vector3>());
+            _quadsBuffer = new ComputeBuffer(chunk.GetSize, Marshal.SizeOf<Vector3>() * 4, ComputeBufferType.Append);
             _verticesArgumentBuffer = new ComputeBuffer(4, sizeof(int), ComputeBufferType.IndirectArguments);
 
             //PART 1 - FIGURE OUT MESH VERTICES
-            _voxelBuffer.SetData(chunk.Voxels); //Put the chunk data in the gpu buffer
+            //_voxelBuffer.SetData(chunk.Voxels); //Put the chunk data in the gpu buffer
             ComputeShader.SetVector("Size", chunk.Size); //Set the chunk dimensions on the gpu
             ComputeShader.SetBuffer(0, "Voxels", _voxelBuffer); //Bind the gpu buffer t
             ComputeShader.SetBuffer(0, "FeaturePoints", _featurePointBuffer); //Bind the output buffer to the 0th kernel
@@ -63,7 +63,7 @@ namespace Assets.Dual_Contouring
             //PART 3 - CONSTRUCT THE MESH INDICES
             var indicesCount = quadCount * 6;
 
-            Debug.Log(indicesCount);
+            //Debug.Log(indicesCount);
 
             _indicesBuffer = new ComputeBuffer(quadCount, sizeof(int) * 6);
             ComputeShader.SetBuffer(2, "Quads", _quadsBuffer);
@@ -90,7 +90,6 @@ namespace Assets.Dual_Contouring
 
         public void ReleaseBuffers()
         {
-            _voxelBuffer?.Release();
             _featurePointBuffer?.Release();
             _quadsBuffer?.Release();
             _indicesBuffer?.Release();

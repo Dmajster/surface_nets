@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Assets.Dual_Contouring.Structs
@@ -6,20 +7,19 @@ namespace Assets.Dual_Contouring.Structs
     [Serializable]
     public struct Chunk
     {
-        public Voxel[] Voxels;
-        
+        public ComputeBuffer ComputeBuffer;
         public Vector3 Position;
         public Vector3 Size;
+        public bool Populated;
+
+        public int GetSize => (int) (Size.x * Size.y * Size.z);
 
         public Chunk(Vector3 size, Vector3 position)
         {
             Position = position;
             Size = size;
-            Voxels = new Voxel[(int)size.x * (int)size.y * (int)size.z];
-            for (var i = 0; i < Voxels.Length; i++)
-            {
-                Voxels[i].Density = float.PositiveInfinity;
-            }
+            ComputeBuffer = new ComputeBuffer((int)(Size.x * Size.y * Size.z), Marshal.SizeOf<Voxel>() );
+            Populated = false;
         }
 
         public int GetIndex(Vector3 position)

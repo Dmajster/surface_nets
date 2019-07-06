@@ -1,0 +1,85 @@
+﻿#pragma kernel Add
+#pragma kernel Remove
+
+
+struct Voxel {
+	float Density;
+};
+
+float3 Size;
+
+float3 Position;
+float Radius;
+bool Populated;
+
+RWStructuredBuffer<Voxel> Voxels;
+
+int GetIndex(float3 position) {
+	return (int)(Size.z * position.z + position.y * (Size.x * Size.z) + position.x);
+}
+
+float3 GetPosition(int index) {
+	return float3(
+		(int)(index % Size.z),
+		(int)(index / (Size.x * Size.z)),
+		(int)(index % (Size.x * Size.z) / Size.z)
+	);
+}
+
+float Perlin(float3 position){
+	return frac(sin(dot(position.xz ,float2(12.9898,78.233))) * 43758.5453);
+}
+
+float Density(float3 position){
+	float height = Perlin(position / 512)*128;
+	height += Perlin(position / 256) * 64;
+	height += Perlin(position / 128) * 32;
+	height += Perlin(position / 64) * 16;
+
+	return position.y - height;
+}
+
+[numthreads(8, 8, 8)]
+void Add(uint3 position : SV_DispatchThreadID)
+{
+	if( position.x >= Size.x || position.y >= Size.y || position.z >= Size.z )
+	{
+		return;
+	}
+
+	Voxel voxel;
+
+	if(Populated){
+		voxel = Voxels[GetIndex(position)];
+		voxel.Density = min(voxel.Density, Density(position));
+	}
+	else
+	{
+		voxel.Density = Density(position);
+	}
+			
+	Voxels[GetIndex(position)] = voxel;
+}
+
+[numthreads(8, 8, 8)]
+void Remove(uint3 position : SV_DispatchThreadID)
+{
+	if( position.x >= Size.x || position.y >= Size.y || position.z >= Size.z )
+	{
+		return;
+	}
+
+	Voxel voxel;
+
+	if(Populated){
+		voxel = Voxels[GetIndex(position)];
+		voxel.Density = min(voxel.Density * -1, Density(position))*-1;
+		
+	}
+	else
+	{
+		voxel.Density = Density(position);
+	}
+			
+	Voxels[GetIndex(position)] = voxel;
+}

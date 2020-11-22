@@ -1,6 +1,5 @@
-# GPU Dual Contouring
-
-this is an implementation of the Dual Contouring surface exctraction algorithm running on the GPU. As this project is planned to be used as a real-time deformable terrain it also includes CSG Boolean operations and Chunking. Yes there are gaps in the terrain, **I have** noticed it.
+# GPU Surface nets
+this is an implementation of the Surface nets surface exctraction algorithm running on the GPU. As this project is planned to be used as a real-time deformable terrain it also includes CSG Boolean operations and Chunking. Yes there are gaps in the terrain, **I have** noticed it.
 
 ![Chunking](../assets/chunking.jpg)
 
